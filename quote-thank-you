@@ -1,0 +1,77 @@
+  <h1>Thanks, we’ll call you shortly</h1>
+
+  <p class="subtext">
+    Your quote request has been received. One of our team will be in touch soon to confirm the details.
+  </p>
+
+  <div class="highlight-box">
+    <strong>Most customers are booked within the hour</strong>
+  </div>
+
+  <p>
+    If you’d prefer to get booked in straight away, you can call us now:
+  </p>
+
+  <a href="tel:07414491491" class="call-btn">
+    📞 Call Now
+  </a>
+
+  <div class="trust-section">
+    <p>✔ Reliable & regular service</p>
+    <p>✔ Fully insured</p>
+    <p>✔ Pure water window cleaning</p>
+  </div>
+
+</div>
+
+<style>
+.thankyou-container {
+  max-width: 600px;
+  margin: 60px auto;
+  text-align: center;
+  font-family: inherit;
+  padding: 20px;
+}
+
+.thankyou-container h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: #d5bb11;
+}
+
+.subtext {
+  font-size: 16px;
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.highlight-box {
+  background: #d5bb11;
+  border-left: 5px solid #d5bb11;
+  padding: 15px;
+  margin: 25px 0;
+  font-size: 18px;
+  border-radius: 6px;
+}
+
+.call-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 24px;
+  background: #d5bb11; /* match your brand */
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  border-radius: 6px;
+}
+
+.call-btn:hover {
+  opacity: 0.9;
+}
+
+.trust-section {
+  margin-top: 30px;
+  font-size: 14px;
+  color: #444;
+}
+</style>
