@@ -1,0 +1,245 @@
+<h2 style="text-align:center; color:#d5bb11;">Get Your Instant Window Cleaning Quote</h2>
+<p style="text-align:center; color:#d5bb11;">Takes less than 30 seconds</p>
+
+<div id="formWrapper">
+<form id="quoteForm" class="quote-form">
+
+  <div class="form-row">
+    <label>Name (required)</label>
+    <input type="text" name="name" required>
+  </div>
+
+  <div class="form-row">
+    <label>Address (required)</label>
+    <input type="text" name="address" required>
+  </div>
+
+  <div class="form-row">
+    <label>Phone Number *</label>
+    <input type="tel" id="phone" name="phone" placeholder="e.g. 07123 456789">
+  </div>
+
+  <div class="form-row">
+    <label>Email Address *</label>
+    <input type="email" id="email" name="email" placeholder="e.g. you@email.com">
+  </div>
+
+  <p style="font-size:12px; color:#666; margin-top:5px; margin-bottom:15px">
+    Please enter either a phone number or email address.
+  </p>
+
+  <div class="form-row">
+    <label>Type of Property</label>
+    <select id="propertyType" name="propertyType" onchange="calculateQuote()">
+      <option value="semi">Semi-Detached</option>
+      <option value="detached">Detached</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Number of Bedrooms</label>
+    <select id="bedrooms" name="bedrooms" onchange="calculateQuote()">
+      <option value="3">3 Bedroom</option>
+      <option value="4">4 Bedroom</option>
+      <option value="5">5 Bedroom</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Conservatory</label>
+    <select id="conservatory" name="conservatory" onchange="calculateQuote()">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Extension</label>
+    <select id="extension" name="extension" onchange="calculateQuote()">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Cleaning Frequency</label>
+    <select id="frequency" name="frequency" onchange="calculateQuote()">
+      <option value="4weekly">4 Weekly</option>
+      <option value="8weekly">8 Weekly</option>
+    </select>
+  </div>
+
+  <p style="color: red; font-size: 14px; margin-top: 10px;">
+    Please note: If your property is very large or of an unusual design, please email photos of the front and rear to
+    <strong>contact@goldsealcleaning.com</strong> or give us a call on 07414 491 491
+  </p>
+
+  <div class="quote-box">
+    <span>Your Instant Estimate</span>
+    <strong id="quoteResult">£0</strong>
+    <small id="quoteRange" style="display:block; margin-top:5px; color:#666;">
+      Based on your selections
+    </small>
+  </div>
+
+  <input type="hidden" name="finalQuote" id="finalQuote">
+  <input type="hidden" name="minQuote" id="minQuote">
+  <input type="hidden" name="maxQuote" id="maxQuote">
+
+  <button type="submit" class="quote-btn" onclick="return true;">Request My Quote</button>
+
+  <p style="text-align:center; font-size:13px; color:#666; margin-top:10px;">
+    ✔ No obligation quote
+    ✔ Fast response times
+    ✔ Trusted local service
+  </p>
+
+</form>
+</div>
+
+<div id="thankYouMessage" style="display:none; background:#f5f5f5;padding:30px;border-radius:10px;text-align:center;">
+  <h2 style="color:#d5bb11;">Thank You</h2><br>
+  <p>Your quote request has been sent successfully.</p><br>
+  <p>Redirecting you now...</p>
+</div>
+
+<style>
+.quote-form {
+  max-width: 500px;
+  margin: auto;
+  font-family: inherit;
+}
+.form-row {
+  margin-bottom: 15px;
+}
+.quote-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+.quote-form input,
+.quote-form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.quote-box {
+  background: #f5f5f5;
+  padding: 15px;
+  text-align: center;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+.quote-box strong {
+  display: block;
+  font-size: 28px;
+  color: #d5bb11;
+}
+.quote-btn {
+  width: 100%;
+  padding: 12px;
+  background: #d5bb11;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.quote-btn:hover {
+  opacity: 0.9;
+}
+</style>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6B-9C_ln58o2XrgX1XDmXr5apveU6I3mx9cWPoNm6IPYE0tAw0iFpZVtD0VhLokC4Bw/exec";
+
+function calculateQuote() {
+  const propertyType = document.getElementById("propertyType").value;
+  const bedrooms = document.getElementById("bedrooms").value;
+  const conservatory = document.getElementById("conservatory").value;
+  const extension = document.getElementById("extension").value;
+  const frequency = document.getElementById("frequency").value;
+
+  let price = 0;
+
+  if (propertyType === "semi") {
+    if (bedrooms === "3") price = 23;
+    if (bedrooms === "4") price = 26;
+    if (bedrooms === "5") price = 32;
+  }
+  if (propertyType === "detached") {
+    if (bedrooms === "3") price = 27;
+    if (bedrooms === "4") price = 30;
+    if (bedrooms === "5") price = 38;
+  }
+  if (extension === "yes") {
+    price += (propertyType === "semi") ? 5 : 6;
+  }
+  if (conservatory === "yes") {
+    price += (propertyType === "semi") ? 8 : 10;
+  }
+  if (frequency === "8weekly") {
+    price = price * 1.3;
+  }
+  if (!price || price < 1) {
+    price = (propertyType === "semi") ? 23 : 27;
+  }
+
+  price = Math.round(price);
+  const minPrice = price;
+  const maxPrice = Math.round(price * 1.08);
+
+  document.getElementById("quoteResult").innerText = "£" + minPrice + " - £" + maxPrice;
+  document.getElementById("finalQuote").value = price;
+  document.getElementById("minQuote").value = minPrice;
+  document.getElementById("maxQuote").value = maxPrice;
+}
+
+function initForm() {
+  const form = document.getElementById("quoteForm");
+  if (!form) {
+    setTimeout(initForm, 100);
+    return;
+  }
+
+  calculateQuote();
+
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const phone = document.getElementById("phone").value.trim();
+    const email = document.getElementById("email").value.trim();
+
+    if (!phone && !email) {
+      alert("Please enter either a phone number or email address.");
+      return;
+    }
+
+    calculateQuote();
+
+    const formData = new FormData(form);
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData
+      });
+
+      document.getElementById("formWrapper").style.display = "none";
+      document.getElementById("thankYouMessage").style.display = "block";
+
+      setTimeout(function() {
+        window.location.href = '/quote-thank-you';
+      }, 1500);
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    }
+  });
+}
+
+initForm();
+</script>
