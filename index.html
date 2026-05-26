@@ -246,6 +246,12 @@ function initForm() {
       document.getElementById("formWrapper").style.display = "none";
       document.getElementById("thankYouMessage").style.display = "block";
 
+      gtag('event', 'conversion', {
+  'send_to': 'AW-11277224268/quote_form_complete',
+  'value': 360.0,
+  'currency': 'GBP'
+});
+      
       setTimeout(function() {
         window.location.href = 'https://www.goldsealcleaning.com/quote-thank-you';
       }, 1500);
