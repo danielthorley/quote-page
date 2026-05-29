@@ -431,7 +431,7 @@
     <p id="cErr" class="err-msg">Please enter a phone number or email address</p>
     <div class="nav-row">
       <button class="btn-back" onclick="goBackContact()">Back</button>
-      <button class="btn-next" id="next6" onclick="submitQuote()" disabled>Get my quote</button>
+      <button class="btn-next" id="next6" onclick="showQuote()" disabled>Get my quote</button>
     </div>
   </div>
 
@@ -445,7 +445,8 @@
       Please note: If your property is very large or of an unusual design, please email photos of the front and rear to
       <strong>contact@goldsealcleaning.com</strong> or give us a call on <strong>07414 491 491</strong>
     </div>
-    <div class="cta-row">
+    <button class="btn-full" onclick="bookIn()">📅 Get me booked in</button>
+    <div class="cta-row" style="margin-top:10px">
       <a href="tel:07414491491" class="cta-call">📞 Call us</a>
       <a href="mailto:contact@goldsealcleaning.com" class="cta-email">✉️ Email us</a>
     </div>
@@ -670,7 +671,12 @@ function renderQuote() {
   }
 }
 
-async function submitQuote() {
+function showQuote() {
+  renderQuote();
+  show(7);
+}
+
+async function bookIn() {
   const { total } = calc();
   const name  = document.getElementById('cName').value.trim();
   const addr  = document.getElementById('cAddr').value.trim();
@@ -694,7 +700,7 @@ async function submitQuote() {
     gtag('event', 'conversion', { send_to: CONFIG.GTAG_CONVERSION, value: 360.0, currency: 'GBP' });
   }
 
-  setTimeout(() => { window.location.href = CONFIG.THANK_YOU_URL; }, 1200);
+  window.location.href = CONFIG.THANK_YOU_URL;
 }
 
 renderDots();
