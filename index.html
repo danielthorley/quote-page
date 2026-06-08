@@ -224,7 +224,7 @@
     background: #fff; border-radius: 6px; border: 1px solid #e8e8e8;
   }
   .first-price { font-size: 13px; font-weight: 600; color: #555; }
-  .first-note { font-size: 11px; color: #999; margin-top: 3px; line-height: 1.5; }
+  .first-note { font-size: 13px; color: #999; margin-top: 3px; line-height: 1.5; }
 
   /* Disclaimer */
   .disclaimer {
@@ -234,7 +234,7 @@
     background: #fafaf7; margin: 1rem 0;
     border-radius: 0 6px 6px 0;
   }
-  .disclaimer strong { color: #FF0000; }
+  .disclaimer strong { color: #FF0000; font-weight: bold;}
 
   /* CTAs */
   .cta-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 1rem; }
@@ -644,7 +644,7 @@ function renderQuote() {
         '<div class="reg-freq">per clean (' + (S.freq === '8weekly' ? 'every 8 weeks' : 'every 4 weeks') + ')</div>' +
         '<div class="first-block">' +
         '<div class="first-price">First clean: £' + l.iMin + '–£' + l.iMax + '</div>' +
-        '<div class="first-note">The first clean has a surcharge to allow us to spend more time getting it perfect</div>' +
+        '<div class="first-note">The first clean has a surcharge to allow us<br> to spend more time getting it perfect</div>' +
         '</div></div>';
     } else if (l.type === 'gutterVac') {
       d.innerHTML = '<span>Gutter vacuuming</span><span>£' + l.price + '</span>';
