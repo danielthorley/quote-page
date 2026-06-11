@@ -680,6 +680,9 @@ function buildLeadData(requestType) {
   const winLine = lines.find(l => l.type === 'windows');
   const minQ = winLine ? winLine.rMin : tot;
   const maxQ = winLine ? winLine.rMax : tot;
+  const gutterVacLine  = lines.find(l => l.type === 'gutterVac');
+  const gutterFullLine = lines.find(l => l.type === 'gutterFull');
+  const roofLine       = lines.find(l => l.type === 'roof');
   const fd = new FormData();
   fd.append('requestType', requestType);
   fd.append('name', name);
@@ -699,8 +702,12 @@ function buildLeadData(requestType) {
   fd.append('services', [...S.svcs].join(', '));
   fd.append('windowCleaning', S.svcs.has('windows') ? 'Yes' : 'No');
   fd.append('gutterVacuuming', S.svcs.has('gutterVac') ? 'Yes' : 'No');
+  fd.append('gutterVacuumingPrice', gutterVacLine ? '£' + gutterVacLine.price : 'No');
   fd.append('gutterSoffitFascia', S.svcs.has('gutterFull') ? 'Yes' : 'No');
+  fd.append('gutterSoffitFasciaPrice', gutterFullLine ? '£' + gutterFullLine.price : 'No');
+  fd.append('comboDiscount', disc > 0 ? '£' + disc : 'No');
   fd.append('conservatoryRoof', S.svcs.has('consRoof') ? (S.panels === 21 ? '21+ panels' : 'Up to ' + S.panels + ' panels') : 'No');
+  fd.append('conservatoryRoofPrice', roofLine ? '£' + roofLine.price : 'No');
   fd.append('minQuote', minQ);
   fd.append('maxQuote', maxQ);
   fd.append('finalQuote', tot);
