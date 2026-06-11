@@ -594,20 +594,20 @@ function calc() {
   const p = S.prop, b = S.beds, lines = [];
   let total = 0;
 
-  if (S.svcs.has('windows')) {
+if (S.svcs.has('windows')) {
     const base = CONFIG.PRICING.windows[p][b];
-    let addons = 0;
-    if (S.cons) addons += CONFIG.PRICING.consAddon[p];
-    if (S.ext)  addons += CONFIG.PRICING.extAddon[p];
-    if (S.velux) addons += CONFIG.PRICING.velux * S.veluxN;
+    const consPrice  = S.cons  ? CONFIG.PRICING.consAddon[p] : 0;
+    const extPrice   = S.ext   ? CONFIG.PRICING.extAddon[p]  : 0;
+    const veluxPrice = S.velux ? CONFIG.PRICING.velux * S.veluxN : 0;
+    const addons = consPrice + extPrice + veluxPrice;
     const freqBase = S.freq === '8weekly' ? Math.round(base * CONFIG.EIGHT_WEEKLY_MARKUP) : base;
     const rMin = freqBase + addons;
     const rMax = Math.round(rMin * CONFIG.RANGE_SPREAD);
     const iMin = Math.round(freqBase * CONFIG.INITIAL_MARKUP) + addons;
     const iMax = Math.round(iMin * CONFIG.RANGE_SPREAD);
-    lines.push({ type: 'windows', rMin, rMax, iMin, iMax });
+    lines.push({ type: 'windows', rMin, rMax, iMin, iMax, base: freqBase, consPrice, extPrice, veluxPrice });
     total += rMin;
-  }
+}
 
   let gSub = 0;
   if (S.svcs.has('gutterVac'))  { const pr = CONFIG.PRICING.gutterVac[p][b];  gSub += pr; lines.push({ type: 'gutterVac', price: pr }); }
@@ -676,12 +676,10 @@ function buildLeadData(requestType) {
   const addr  = document.getElementById('cAddr').value.trim();
   const phone = document.getElementById('cPhone').value.trim();
   const email = document.getElementById('cEmail').value.trim();
-
   const { lines, disc, total: tot } = calc();
   const winLine = lines.find(l => l.type === 'windows');
   const minQ = winLine ? winLine.rMin : tot;
   const maxQ = winLine ? winLine.rMax : tot;
-
   const fd = new FormData();
   fd.append('requestType', requestType);
   fd.append('name', name);
@@ -693,6 +691,10 @@ function buildLeadData(requestType) {
   fd.append('conservatory', S.cons ? 'Yes' : 'No');
   fd.append('extension', S.ext ? 'Yes' : 'No');
   fd.append('velux', S.velux ? S.veluxN + ' window(s)' : 'No');
+  fd.append('windowBasePrice', winLine ? winLine.base : '');
+  fd.append('addonConservatory', winLine && winLine.consPrice ? '£' + winLine.consPrice : 'No');
+  fd.append('addonExtension', winLine && winLine.extPrice ? '£' + winLine.extPrice : 'No');
+  fd.append('addonVelux', winLine && winLine.veluxPrice ? '£' + winLine.veluxPrice : 'No');
   fd.append('frequency', S.freq === '4weekly' ? '4 Weekly' : '8 Weekly');
   fd.append('services', [...S.svcs].join(', '));
   fd.append('windowCleaning', S.svcs.has('windows') ? 'Yes' : 'No');
@@ -704,7 +706,7 @@ function buildLeadData(requestType) {
   fd.append('finalQuote', tot);
   return fd;
 }
-
+  
   async function sendLead(requestType) {
   const fd = buildLeadData(requestType);
   try { await fetch(CONFIG.SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' }); } catch(e) { console.error(e); }
