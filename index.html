@@ -671,16 +671,7 @@ function renderQuote() {
   }
 }
 
-function showQuote() {
-  renderQuote();
-  show(7);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-async function bookIn() {
-  // Disable button immediately to prevent double-tap
-  const btn = document.querySelector('#step7 .btn-full');
-  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+function buildLeadData(requestType) {
   const name  = document.getElementById('cName').value.trim();
   const addr  = document.getElementById('cAddr').value.trim();
   const phone = document.getElementById('cPhone').value.trim();
@@ -692,6 +683,7 @@ async function bookIn() {
   const maxQ = winLine ? winLine.rMax : tot;
 
   const fd = new FormData();
+  fd.append('requestType', requestType);
   fd.append('name', name);
   fd.append('address', addr);
   fd.append('phone', phone);
@@ -703,9 +695,6 @@ async function bookIn() {
   fd.append('velux', S.velux ? S.veluxN + ' window(s)' : 'No');
   fd.append('frequency', S.freq === '4weekly' ? '4 Weekly' : '8 Weekly');
   fd.append('services', [...S.svcs].join(', '));
-  fd.append('gutterVacuuming', S.svcs.has('gutterVac') ? 'Yes' : 'No');
-  fd.append('gutterSoffitFascia', S.svcs.has('gutterFull') ? 'Yes' : 'No');
-  fd.append('conservatoryRoof', S.svcs.has('consRoof') ? (S.panels ? S.panels + '+ panels' : 'Yes') : 'No');
   fd.append('windowCleaning', S.svcs.has('windows') ? 'Yes' : 'No');
   fd.append('gutterVacuuming', S.svcs.has('gutterVac') ? 'Yes' : 'No');
   fd.append('gutterSoffitFascia', S.svcs.has('gutterFull') ? 'Yes' : 'No');
@@ -713,8 +702,26 @@ async function bookIn() {
   fd.append('minQuote', minQ);
   fd.append('maxQuote', maxQ);
   fd.append('finalQuote', tot);
+  return fd;
+}
 
+  async function sendLead(requestType) {
+  const fd = buildLeadData(requestType);
   try { await fetch(CONFIG.SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' }); } catch(e) { console.error(e); }
+}
+  
+  function showQuote() {
+  renderQuote();
+  show(7);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  sendLead('quote');
+}
+  
+async function bookIn() {
+  const btn = document.querySelector('#step7 .btn-full');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+
+  await sendLead('booking');
 
   if (typeof gtag !== 'undefined') {
     gtag('event', 'conversion', { send_to: CONFIG.GTAG_CONVERSION, value: 360.0, currency: 'GBP' });
