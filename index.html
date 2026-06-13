@@ -739,8 +739,11 @@ async function bookIn() {
     gtag('event', 'conversion', { send_to: CONFIG.GTAG_CONVERSION, value: 360.0, currency: 'GBP' });
   }
 
-  window.location.href = CONFIG.THANK_YOU_URL;
-}
+if (window.top !== window.self) {
+    window.top.location.href = CONFIG.THANK_YOU_URL;
+  } else {
+    window.location.href = CONFIG.THANK_YOU_URL;
+  }}
 
 renderDots();
 </script>
