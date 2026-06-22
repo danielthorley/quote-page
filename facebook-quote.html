@@ -739,5 +739,11 @@ async function bookIn() {
 
 renderDots();
 </script>
+<script>
+const heightObserver = new ResizeObserver(([{ contentRect }]) => {
+  window.parent.postMessage({ action: 'iframeHeightUpdated', height: contentRect.height }, '*');
+});
+heightObserver.observe(document.querySelector('.qs-wrap'));
+</script>
 </body>
 </html>
