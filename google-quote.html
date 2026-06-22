@@ -727,16 +727,14 @@ async function bookIn() {
 
   await sendLead('booking');
 
-  if (window.parent) {
-    window.parent.postMessage({
-      type: 'goldseal_booking_complete',
-      value: 360.0,
-      currency: 'GBP',
-      source: 'google-quote'
-    }, '*');
-  }
+  window.parent.postMessage({
+    type: 'goldseal_booking_complete',
+    value: 360.0,
+    currency: 'GBP',
+    source: 'google-quote'
+  }, '*');
 
-  window.location.href = CONFIG.THANK_YOU_URL;
+  window.top.location.href = CONFIG.THANK_YOU_URL;
 }
 
 renderDots();
