@@ -724,9 +724,8 @@ function buildLeadData(requestType) {
 async function bookIn() {
   const btn = document.querySelector('#step7 .btn-full');
   if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
-
   await sendLead('booking');
-
+  
   window.parent.postMessage({
     type: 'goldseal_booking_complete',
     value: 360.0,
@@ -734,7 +733,9 @@ async function bookIn() {
     source: 'facebook'
   }, '*');
 
-  window.top.location.href = CONFIG.THANK_YOU_URL;
+  setTimeout(function() {
+    window.top.location.href = CONFIG.THANK_YOU_URL;
+  }, 500);
 }
 
 renderDots();
