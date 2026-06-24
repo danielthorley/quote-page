@@ -279,11 +279,12 @@
   <!-- Step 2: Bedrooms -->
   <div id="step2" class="qs-step">
     <span class="qs-label">How many bedrooms?</span>
-    <div class="opt-grid three">
-      <div class="opt-card" data-val="3" onclick="selectBed(this)">3 bed</div>
-      <div class="opt-card" data-val="4" onclick="selectBed(this)">4 bed</div>
-      <div class="opt-card" data-val="5" onclick="selectBed(this)">5 bed</div>
-    </div>
+<div class="opt-grid two">
+  <div class="opt-card" data-val="2" onclick="selectBed(this)">2 bed</div>
+  <div class="opt-card" data-val="3" onclick="selectBed(this)">3 bed</div>
+  <div class="opt-card" data-val="4" onclick="selectBed(this)">4 bed</div>
+  <div class="opt-card" data-val="5" onclick="selectBed(this)">5 bed</div>
+</div>
     <div class="nav-row">
       <button class="btn-back" onclick="goTo(1)">Back</button>
       <button class="btn-next" id="next2" onclick="goTo(3)" disabled>Continue</button>
@@ -648,7 +649,7 @@ function validateContact() {
 
 // ===== CALCULATION =====
 function calc() {
-  const p = S.prop, b = S.beds, lines = [];
+const p = S.prop, b = S.beds === '2' ? '3' : S.beds, lines = [];
   let total = 0;
 
   if (S.svcs.has('windows')) {
