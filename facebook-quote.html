@@ -240,6 +240,24 @@
     font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 1rem;
   }
 </style>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '611917255671444');
+fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=611917255671444&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
 </head>
 <body>
 
@@ -279,11 +297,12 @@
   <!-- Step 2: Bedrooms -->
   <div id="step2" class="qs-step">
     <span class="qs-label">How many bedrooms?</span>
-    <div class="opt-grid three">
-      <div class="opt-card" data-val="3" onclick="selectBed(this)">3 bed</div>
-      <div class="opt-card" data-val="4" onclick="selectBed(this)">4 bed</div>
-      <div class="opt-card" data-val="5" onclick="selectBed(this)">5 bed</div>
-    </div>
+<div class="opt-grid two">
+  <div class="opt-card" data-val="2" onclick="selectBed(this)">2 bed</div>
+  <div class="opt-card" data-val="3" onclick="selectBed(this)">3 bed</div>
+  <div class="opt-card" data-val="4" onclick="selectBed(this)">4 bed</div>
+  <div class="opt-card" data-val="5" onclick="selectBed(this)">5 bed</div>
+</div>
     <div class="nav-row">
       <button class="btn-back" onclick="goTo(1)">Back</button>
       <button class="btn-next" id="next2" onclick="goTo(3)" disabled>Continue</button>
@@ -644,7 +663,7 @@ function validateContact() {
 
 // ===== CALCULATION =====
 function calc() {
-  const p = S.prop, b = S.beds, lines = [];
+  const p = S.prop, b = S.beds === '2' ? '3' : S.beds, lines = [];
   let total = 0;
 
   if (S.svcs.has('windows')) {
