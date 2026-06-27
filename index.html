@@ -234,30 +234,16 @@
     font-size: 13px; color: #bbb; cursor: pointer; text-decoration: underline;
   }
   .btn-back-solo:hover { color: #888; }
+  .flat-message { text-align: center; padding: 0.5rem 0 1.5rem; }
+  .flat-message .flat-icon { font-size: 52px; margin-bottom: 0.75rem; }
+  .flat-message p { font-size: 15px; color: #444; line-height: 1.7; margin-bottom: 1.5rem; }
+  .flat-cta-stack { display: flex; flex-direction: column; gap: 10px; }
   .terraced-notice {
     background: #fdfae8; border: 1px solid #d5bb11;
     border-radius: var(--radius-sm); padding: 11px 14px;
     font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 1rem;
   }
 </style>
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '611917255671444');
-fbq('track', 'PageView');
-</script>
-<noscript>
-  <img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=611917255671444&ev=PageView&noscript=1"/>
-</noscript>
-<!-- End Meta Pixel -->
 </head>
 <body>
 
@@ -289,6 +275,10 @@ fbq('track', 'PageView');
       <div class="prop-card" data-val="terraced" onclick="selectProp(this)">
         <img src="terraced.png" alt="Terraced house">
         <div class="prop-label">Terraced (front only)</div>
+      </div>
+      <div class="prop-card" data-val="flat" onclick="selectProp(this)">
+        <img src="flat.png" alt="Flat or apartment">
+        <div class="prop-label">Flat / Apartment</div>
       </div>
     </div>
     <button class="btn-full" id="next1" onclick="afterPropSelected()" disabled>Continue</button>
@@ -423,6 +413,22 @@ fbq('track', 'PageView');
     <div class="nav-row">
       <button class="btn-back" onclick="goBackContact()">Back</button>
       <button class="btn-next" id="next6" onclick="showQuote()" disabled>Get my quote</button>
+    </div>
+  </div>
+
+  <!-- Step Flat: routes to phone/email rather than quote -->
+  <div id="stepFlat" class="qs-step">
+    <div class="flat-message">
+      <div class="flat-icon">🏢</div>
+      <span class="qs-label">We clean flats too!</span>
+      <p>We clean a number of flats in the Worthing area — give us a call or drop us an email and we'll have a quick chat to find out if we can help you.</p>
+      <div class="flat-cta-stack">
+        <a href="tel:07414491491" class="cta-call">📞 Call us — 07414 491 491</a>
+        <a href="mailto:contact@goldsealcleaning.com" class="cta-email">✉️ contact@goldsealcleaning.com</a>
+      </div>
+    </div>
+    <div style="margin-top:0.5rem;">
+      <button class="btn-back-solo" onclick="goTo(1)">← Back</button>
     </div>
   </div>
 
@@ -563,10 +569,18 @@ function show(n) {
 
 function goTo(n) { show(n); }
 
-// After property selection: terraced skips bedrooms, goes straight to services
+// Show flat enquiry screen — bypasses quote flow entirely
+function showFlat() {
+  document.querySelectorAll('.qs-step').forEach(s => s.classList.remove('visible'));
+  document.getElementById('stepFlat').classList.add('visible');
+}
+
+// After property selection: flat → contact screen; terraced → skip bedrooms; others → bedrooms
 function afterPropSelected() {
-  if (S.prop === 'terraced') {
-    S.beds = '3'; // default for gutter pricing (terraced uses flat semi 3-bed rate)
+  if (S.prop === 'flat') {
+    showFlat();
+  } else if (S.prop === 'terraced') {
+    S.beds = '3';
     show(3);
   } else {
     show(2);
