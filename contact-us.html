@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Your Instant Quote | Goldseal Cleaning</title>
+<style>
+  :root {
+    --gold: #d5bb11;
+    --gold-light: #fdfae8;
+    --gold-dark: #7a6b00;
+    --green: #3B6D11;
+    --green-light: #eaf3de;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .qs-wrap {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    max-width: 480px;
+    width: 100%;
+    padding: 1.5rem 1.25rem 2rem;
+    margin-top: 1rem;
+  }
+  .qs-logo { text-align: center; margin-bottom: 0.75rem; }
+  .qs-logo img { max-width: 160px; }
+  .qs-header { text-align: center; margin-bottom: 1.25rem; }
+  .qs-header h1 { font-size: 20px; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
+  .qs-header p { font-size: 13px; color: #888; }
+  .progress-bar { display: flex; gap: 6px; justify-content: center; margin-bottom: 1.5rem; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #e0e0e0; transition: background 0.2s; }
+  .dot.active { background: var(--gold); }
+  .dot.done { background: var(--gold); opacity: 0.4; }
+  .qs-step { display: none; }
+  .qs-step.visible { display: block; }
+  .qs-label { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 10px; display: block; }
+  .qs-sub { font-size: 12px; color: #888; margin-bottom: 12px; }
+  .prop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 1rem; }
+  .prop-card {
+    border: 1.5px solid #e0e0e0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: #fff;
+  }
+  .prop-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(213,187,17,0.15); }
+  .prop-card.selected { border-color: var(--gold); border-width: 2px; background: var(--gold-light); }
+  .prop-card img { width: 100%; height: 100px; object-fit: cover; display: block; }
+  .prop-card .prop-label { font-size: 13px; font-weight: 600; color: #333; text-align: center; padding: 10px 8px; }
+  .prop-card.selected .prop-label { color: var(--gold-dark); }
+  .opt-grid { display: grid; gap: 10px; margin-bottom: 1rem; }
+  .opt-grid.two { grid-template-columns: repeat(2, 1fr); }
+  .opt-grid.three { grid-template-columns: repeat(3, 1fr); }
+  .opt-card {
+    border: 1.5px solid #e0e0e0;
+    border-radius: var(--radius-sm);
+    padding: 13px 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    background: #fff;
+    transition: border-color 0.15s;
+  }
+  .opt-card:hover { border-color: var(--gold); }
+  .opt-card.selected { border-color: var(--gold); border-width: 2px; background: var(--gold-light); color: var(--gold-dark); }
+  .svc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .svc-card {
+    border: 1.5px solid #e0e0e0;
+    border-radius: var(--radius);
+    padding: 14px 10px;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.15s;
+    text-align: center;
+  }
+  .svc-card:hover { border-color: var(--gold); }
+  .svc-card.selected { border-color: var(--gold); border-width: 2px; background: var(--gold-light); }
+  .svc-card .svc-icon { font-size: 22px; margin-bottom: 6px; }
+  .svc-card .svc-name { font-size: 13px; font-weight: 600; color: #333; }
+  .svc-card.selected .svc-name { color: var(--gold-dark); }
+  .combo-banner {
+    background: var(--gold-light);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--gold-dark);
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 500;
+  }
+  .combo-banner.applied { background: var(--green-light); border-color: var(--green); color: var(--green); }
+  .addon-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1.5px solid #e0e0e0;
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.15s;
+  }
+  .addon-row:hover { border-color: var(--gold); }
+  .addon-row.selected { border-color: var(--gold); border-width: 2px; background: var(--gold-light); }
+  .addon-label { font-size: 14px; color: #333; }
+  .addon-row.selected .addon-label { color: var(--gold-dark); }
+  .addon-sub { font-size: 11px; color: #999; margin-left: 4px; }
+  .check-circle {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid #ccc;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 13px; color: #fff;
+  }
+  .addon-row.selected .check-circle { background: var(--gold); border-color: var(--gold); }
+  .velux-counter { display: flex; align-items: center; gap: 14px; padding: 10px 14px 4px; }
+  .velux-counter button {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid #ccc; background: #fff;
+    font-size: 20px; cursor: pointer; color: #333;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s;
+  }
+  .velux-counter button:hover { border-color: var(--gold); }
+  .velux-num { font-size: 20px; font-weight: 600; min-width: 28px; text-align: center; color: #333; }
+  .velux-label { font-size: 13px; color: #888; }
+  .panel-opt {
+    border: 1.5px solid #e0e0e0;
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    background: #fff;
+    transition: border-color 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .panel-opt:hover { border-color: var(--gold); }
+  .panel-opt.selected { border-color: var(--gold); border-width: 2px; background: var(--gold-light); color: var(--gold-dark); font-weight: 600; }
+  .panel-price { font-weight: 600; color: var(--gold); }
+  .panel-opt.selected .panel-price { color: var(--gold-dark); }
+  .form-row { margin-bottom: 14px; }
+  .form-row label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; }
+  .form-row input {
+    width: 100%; padding: 11px 13px;
+    border: 1.5px solid #e0e0e0; border-radius: var(--radius-sm);
+    font-size: 14px; color: #333; background: #fff;
+    transition: border-color 0.15s; outline: none;
+  }
+  .form-row input:focus { border-color: var(--gold); }
+  .form-note { font-size: 12px; color: #888; margin-bottom: 14px; }
+  .err-msg { font-size: 12px; color: #dc2626; margin-top: 4px; display: none; }
+  .quote-box { background: #f9f9f6; border-radius: var(--radius); padding: 1.25rem; margin: 1rem 0; border: 1px solid #eee; }
+  .quote-box-title { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .q-line {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    font-size: 14px; padding: 9px 0; border-bottom: 1px solid #eee; color: #333;
+  }
+  .q-line:last-child { border-bottom: none; }
+  .q-line.discount { color: var(--green); font-weight: 500; }
+  .q-line.total { font-weight: 700; font-size: 16px; border-top: 2px solid #e0e0e0; margin-top: 6px; padding-top: 12px; border-bottom: none; color: #111; }
+  .reg-price { font-size: 20px; font-weight: 700; color: var(--gold); }
+  .reg-freq { font-size: 11px; color: #999; margin-top: 2px; }
+  .first-block {
+    margin-top: 6px; padding: 8px 10px;
+    background: #fff; border-radius: 6px; border: 1px solid #e8e8e8;
+  }
+  .first-price { font-size: 13px; font-weight: 600; color: #555; }
+  .first-note { font-size: 13px; color: #999; margin-top: 3px; line-height: 1.5; }
+  /* Disclaimer — important notice, red and bold */
+  .disclaimer {
+    border-left: 3px solid #dc2626;
+    padding: 10px 14px;
+    font-size: 13px; color: #dc2626; font-weight: 600; line-height: 1.7;
+    background: #fff5f5; margin: 1rem 0 0.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+  .disclaimer strong { color: #dc2626; font-weight: 700; }
+  .cta-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 1rem; }
+  .cta-call {
+    display: block; text-align: center; text-decoration: none;
+    background: var(--gold); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    padding: 13px; font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  .cta-email {
+    display: block; text-align: center; text-decoration: none;
+    background: #fff; color: #333;
+    border: 1.5px solid #e0e0e0; border-radius: var(--radius-sm);
+    padding: 13px; font-size: 15px; cursor: pointer;
+  }
+  .nav-row { display: flex; gap: 10px; margin-top: 1.5rem; }
+  .btn-back {
+    flex: 1; background: #f5f5f0; border: 1.5px solid #e0e0e0;
+    border-radius: var(--radius-sm); padding: 12px;
+    font-size: 14px; cursor: pointer; color: #555; font-weight: 500;
+  }
+  .btn-next {
+    flex: 2; background: var(--gold); border: none;
+    border-radius: var(--radius-sm); padding: 12px;
+    font-size: 14px; font-weight: 600; cursor: pointer; color: #fff;
+    transition: opacity 0.15s;
+  }
+  .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-full {
+    width: 100%; background: var(--gold); border: none;
+    border-radius: var(--radius-sm); padding: 13px;
+    font-size: 15px; font-weight: 600; cursor: pointer; color: #fff;
+    margin-top: 1.25rem; transition: opacity 0.15s;
+  }
+  .btn-full:disabled { opacity: 0.35; cursor: not-allowed; }
+  .trust-row { display: flex; justify-content: center; gap: 16px; font-size: 12px; color: #999; margin-top: 12px; flex-wrap: wrap; }
+  .trust-row span::before { content: '✓ '; color: var(--gold); font-weight: 700; }
+  .btn-back-solo {
+    background: none; border: none; padding: 6px 0;
+    font-size: 13px; color: #bbb; cursor: pointer; text-decoration: underline;
+  }
+  .btn-back-solo:hover { color: #888; }
+  .flat-message { text-align: center; padding: 0.5rem 0 1.5rem; }
+  .flat-message .flat-icon { font-size: 52px; margin-bottom: 0.75rem; }
+  .flat-message p { font-size: 15px; color: #444; line-height: 1.7; margin-bottom: 1.5rem; }
+  .flat-cta-stack { display: flex; flex-direction: column; gap: 10px; }
+  .terraced-notice {
+    background: #fdfae8; border: 1px solid #d5bb11;
+    border-radius: var(--radius-sm); padding: 11px 14px;
+    font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="qs-wrap">
+  <div class="qs-logo">
+    <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,fit=crop/Yg2aEP2E4wFaVXkk/logo-dJoBx0bbx1h4WXbx.png" alt="Goldseal Cleaning">
+  </div>
+  <p style="text-align:center; font-size:13px; color:#666; margin-top:-8px; margin-bottom:12px;">
+    20 years cleaning windows in Worthing — many of our customers have been with us since the start.
+  </p>
+  <div class="qs-header">
+    <h1>Get your instant quote</h1>
+    <p>Takes less than 60 seconds</p>
+  </div>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Step 1: Property type -->
+  <div id="step1" class="qs-step visible">
+    <span class="qs-label">What type of property is it?</span>
+    <div class="prop-grid">
+      <div class="prop-card" data-val="semi" onclick="selectProp(this)">
+        <img src="semi-detached.png" alt="Semi-detached house">
+        <div class="prop-label">Semi-detached</div>
+      </div>
+      <div class="prop-card" data-val="detached" onclick="selectProp(this)">
+        <img src="detached.png" alt="Detached house">
+        <div class="prop-label">Detached</div>
+      </div>
+      <div class="prop-card" data-val="terraced" onclick="selectProp(this)">
+        <img src="terraced.png" alt="Terraced house">
+        <div class="prop-label">Terraced (front only)</div>
+      </div>
+      <div class="prop-card" data-val="flat" onclick="selectProp(this)">
+        <img src="flat.png" alt="Flat or apartment">
+        <div class="prop-label">Flat / Apartment</div>
+      </div>
+    </div>
+    <button class="btn-full" id="next1" onclick="afterPropSelected()" disabled>Continue</button>
+  </div>
+
+  <!-- Step 2: Bedrooms -->
+  <div id="step2" class="qs-step">
+    <span class="qs-label">How many bedrooms?</span>
+<div class="opt-grid two">
+  <div class="opt-card" data-val="2" onclick="selectBed(this)">2 bed</div>
+  <div class="opt-card" data-val="3" onclick="selectBed(this)">3 bed</div>
+  <div class="opt-card" data-val="4" onclick="selectBed(this)">4 bed</div>
+  <div class="opt-card" data-val="5" onclick="selectBed(this)">5 bed</div>
+</div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(1)">Back</button>
+      <button class="btn-next" id="next2" onclick="goTo(3)" disabled>Continue</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Services -->
+  <div id="step3" class="qs-step">
+    <div id="terracedNotice" class="terraced-notice" style="display:none">
+      🏘️ <strong>Front windows only</strong> — On terraced properties we clean the front of your home. Rear access can be restricted on terraced houses, so we focus on the windows visible from the street.
+    </div>
+    <span class="qs-label">Which services do you need?</span>
+    <p class="qs-sub">Select all that apply</p>
+    <div id="comboBanner" class="combo-banner">💰 Save 20% when you book both gutter services together</div>
+    <div class="svc-grid">
+      <div class="svc-card" data-svc="windows" onclick="toggleSvc(this)">
+        <div class="svc-icon">🪟</div>
+        <div class="svc-name">Window cleaning</div>
+      </div>
+      <div class="svc-card" data-svc="gutterVac" onclick="toggleSvc(this)">
+        <div class="svc-icon">💨</div>
+        <div class="svc-name">Gutter vacuuming</div>
+      </div>
+      <div class="svc-card" data-svc="gutterFull" onclick="toggleSvc(this)">
+        <div class="svc-icon">🔧</div>
+        <div class="svc-name">Gutter, soffit &amp; fascia</div>
+      </div>
+      <div class="svc-card" data-svc="consRoof" onclick="toggleSvc(this)">
+        <div class="svc-icon">🏠</div>
+        <div class="svc-name">Conservatory roof</div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBackToBedroomsOrProp()">Back</button>
+      <button class="btn-next" id="next3" onclick="goToAfter3()" disabled>Continue</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Window add-ons (conditional on windows selected) -->
+  <div id="step4" class="qs-step">
+    <span class="qs-label">Window cleaning add-ons</span>
+    <p class="qs-sub">Anything else at the property?</p>
+    <div class="addon-row" id="addCons" onclick="toggleAddon('cons')">
+      <span class="addon-label">Conservatory<span class="addon-sub">(windows only, not the roof)</span></span>
+      <div class="check-circle">✓</div>
+    </div>
+    <div class="addon-row" id="addExt" onclick="toggleAddon('ext')">
+      <span class="addon-label">Extension</span>
+      <div class="check-circle">✓</div>
+    </div>
+    <div class="addon-row" id="addVelux" onclick="toggleAddon('velux')" style="margin-bottom:0">
+      <span class="addon-label">Velux windows</span>
+      <div class="check-circle">✓</div>
+    </div>
+    <div id="veluxCounter" style="display:none;margin-bottom:8px">
+      <div class="velux-counter">
+        <button onclick="changeVelux(-1)">−</button>
+        <span class="velux-num" id="veluxCount">1</span>
+        <button onclick="changeVelux(1)">+</button>
+        <span class="velux-label">windows</span>
+      </div>
+    </div>
+    <span class="qs-label" style="margin-top:1.25rem;display:block">Cleaning frequency</span>
+    <div class="opt-grid two">
+      <div class="opt-card selected" data-freq="4weekly" onclick="selectFreq(this)">Every 4 weeks</div>
+      <div class="opt-card" data-freq="8weekly" onclick="selectFreq(this)">Every 8 weeks</div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(3)">Back</button>
+      <button class="btn-next" onclick="goToAfter4()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Conservatory roof panels (conditional on consRoof selected) -->
+  <div id="step5" class="qs-step">
+    <span class="qs-label">Conservatory roof — how many panels?</span>
+    <p class="qs-sub">Count the glass panels on your conservatory roof</p>
+    <div class="panel-opt" data-panels="10" onclick="selectPanels(this)">
+      <span>Up to 10 panels</span><span class="panel-price">£150</span>
+    </div>
+    <div class="panel-opt" data-panels="15" onclick="selectPanels(this)">
+      <span>12–15 panels</span><span class="panel-price">£175</span>
+    </div>
+    <div class="panel-opt" data-panels="20" onclick="selectPanels(this)">
+      <span>16–20 panels</span><span class="panel-price">£200</span>
+    </div>
+    <div class="panel-opt" data-panels="21" onclick="selectPanels(this)">
+      <span>21+ panels</span><span class="panel-price">£225</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBack5()">Back</button>
+      <button class="btn-next" id="next5" onclick="goTo(6)" disabled>Continue</button>
+    </div>
+  </div>
+
+  <!-- Step 6: Contact details — collected before the quote is shown -->
+  <div id="step6" class="qs-step">
+    <span class="qs-label">Almost done — your details</span>
+    <p class="qs-sub">We'll only use these to get back to you about this enquiry — we won't share them or use them for anything else.</p>
+    <div class="form-row">
+      <label>Full name *</label>
+      <input type="text" id="cName" placeholder="Your name" oninput="validateContact()">
+    </div>
+    <div class="form-row">
+      <label>Address *</label>
+      <input type="text" id="cAddr" placeholder="Your address" oninput="validateContact()">
+    </div>
+    <div class="form-row">
+      <label>Phone number</label>
+      <input type="tel" id="cPhone" placeholder="e.g. 07123 456789" oninput="validateContact()">
+    </div>
+    <div class="form-row">
+      <label>Email address</label>
+      <input type="email" id="cEmail" placeholder="e.g. you@email.com" oninput="validateContact()">
+    </div>
+    <p class="form-note">Please enter either a phone number or email address.</p>
+    <p id="cErr" class="err-msg">Please enter a phone number or email address</p>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBackContact()">Back</button>
+      <button class="btn-next" id="next6" onclick="showQuote()" disabled>Get my quote</button>
+    </div>
+  </div>
+
+  <!-- Step Flat: routes to phone/email rather than quote -->
+  <div id="stepFlat" class="qs-step">
+    <div class="flat-message">
+      <div class="flat-icon">🏢</div>
+      <span class="qs-label">We clean flats too!</span>
+      <p>We clean a number of flats in the Worthing area — give us a call or drop us an email and we'll have a quick chat to find out if we can help you.</p>
+      <div class="flat-cta-stack">
+        <a href="tel:07414491491" class="cta-call">📞 Call us — 07414 491 491</a>
+        <a href="mailto:contact@goldsealcleaning.com" class="cta-email">✉️ contact@goldsealcleaning.com</a>
+      </div>
+    </div>
+    <div style="margin-top:0.5rem;">
+      <button class="btn-back-solo" onclick="goTo(1)">← Back</button>
+    </div>
+  </div>
+
+  <!-- Step 7: Quote display -->
+  <div id="step7" class="qs-step">
+    <div class="quote-box">
+      <div class="quote-box-title">Your estimate</div>
+      <div id="quoteLines"></div>
+    </div>
+    <button class="btn-full" onclick="bookIn()">📅 Get me booked in</button>
+    <div class="cta-row" style="margin-top:10px">
+      <a href="tel:07414491491" class="cta-call">📞 Call us</a>
+      <a href="mailto:contact@goldsealcleaning.com" class="cta-email">✉️ Email us</a>
+    </div>
+    <p class="trust-row">
+      <span>No obligation</span>
+      <span>Fast response</span>
+      <span>Trusted local service</span>
+    </p>
+    <div class="disclaimer">
+      If your property is particularly large or has an unusual layout, feel free to email photos to
+      <strong>contact@goldsealcleaning.com</strong> or call us on <strong>07414 491 491</strong> and we'll give you an accurate price.
+    </div>
+    <div style="margin-top:0.5rem;">
+      <button class="btn-back-solo" onclick="goTo(6)">← Back</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== CONFIG — edit pricing and business details here =====
+const CONFIG = {
+  BUSINESS_NAME: 'Goldseal Cleaning',
+  BUSINESS_PHONE: '07414491491',
+  BUSINESS_EMAIL: 'contact@goldsealcleaning.com',
+  THANK_YOU_URL: 'https://danielthorley.github.io/quote-page/thank-you.html?source=contact',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw6B-9C_ln58o2XrgX1XDmXr5apveU6I3mx9cWPoNm6IPYE0tAw0iFpZVtD0VhLokC4Bw/exec',
+  SOURCE_LABEL: 'Contact Us',
+  INITIAL_MARKUP: 1.5,
+  EIGHT_WEEKLY_MARKUP: 1.3,           // semi / detached only
+  TERRACED_EIGHT_WEEKLY_SURCHARGE: 2,  // terraced: flat +£2, not a percentage
+  RANGE_SPREAD: 1.08,
+  COMBO_DISCOUNT: 0.20,
+  PRICING: {
+    windows: {
+      semi:     { 3: 23, 4: 26, 5: 32 },
+      detached: { 3: 27, 4: 30, 5: 38 },
+      terraced: { 3: 18, 4: 18, 5: 18 }   // flat minimum — front only
+    },
+    consAddon: { semi: 8,  detached: 10, terraced: 8  },
+    extAddon:  { semi: 5,  detached: 6,  terraced: 5  },
+    velux: 2,
+    gutterVac: {
+      semi:     { 3: 120, 4: 140, 5: 160 },
+      detached: { 3: 150, 4: 170, 5: 200 },
+      terraced: { 3: 120, 4: 120, 5: 120 }  // flat — semi 3-bed rate
+    },
+    gutterFull: {
+      semi:     { 3: 180, 4: 210, 5: 240 },
+      detached: { 3: 225, 4: 255, 5: 300 },
+      terraced: { 3: 180, 4: 180, 5: 180 }  // flat — semi 3-bed rate
+    },
+    consRoof: { 10: 150, 15: 175, 20: 200, 21: 225 }
+  }
+};
+// ===== END CONFIG =====
+
+// ===== STATE =====
+const S = {
+  prop: null, beds: null,
+  svcs: new Set(),
+  cons: false, ext: false, velux: false, veluxN: 1,
+  freq: '4weekly',
+  panels: null,
+  step: 1
+};
+
+// ===== NAVIGATION =====
+function stepSeq() {
+  const s = [1];
+  if (S.prop !== 'terraced') s.push(2); // terraced skips bedroom selection
+  s.push(3);
+  if (S.svcs.has('windows')) s.push(4);
+  if (S.svcs.has('consRoof')) s.push(5);
+  s.push(6, 7); // 6 = quote display, 7 = contact details
+  return s;
+}
+
+function renderDots() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  stepSeq().forEach(n => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === S.step ? ' active' : n < S.step ? ' done' : '');
+    bar.appendChild(d);
+  });
+}
+
+function show(n) {
+  document.querySelectorAll('.qs-step').forEach(s => s.classList.remove('visible'));
+  document.getElementById('step' + n).classList.add('visible');
+  S.step = n;
+  renderDots();
+
+  const isTerr = S.prop === 'terraced';
+
+  // Terraced notice on services step
+  const notice = document.getElementById('terracedNotice');
+  if (notice) notice.style.display = (n === 3 && isTerr) ? 'block' : 'none';
+
+  // Step 3: hide gutter/roof options for terraced (front only — no access to sides or rear)
+  if (n === 3) {
+    ['gutterVac', 'gutterFull', 'consRoof'].forEach(svc => {
+      const el = document.querySelector('[data-svc="' + svc + '"]');
+      if (el) el.style.display = isTerr ? 'none' : '';
+      if (isTerr && S.svcs.has(svc)) { S.svcs.delete(svc); if (el) el.classList.remove('selected'); }
+    });
+    const banner = document.getElementById('comboBanner');
+    if (banner) banner.style.display = isTerr ? 'none' : '';
+    document.getElementById('next3').disabled = S.svcs.size === 0;
+  }
+
+  // Step 4: hide conservatory and extension rows for terraced (front only)
+  if (n === 4) {
+    const addConsRow = document.getElementById('addCons');
+    const addExtRow  = document.getElementById('addExt');
+    if (addConsRow) addConsRow.style.display = isTerr ? 'none' : '';
+    if (addExtRow)  addExtRow.style.display  = isTerr ? 'none' : '';
+    if (isTerr) {
+      if (S.cons) { S.cons = false; addConsRow && addConsRow.classList.remove('selected'); }
+      if (S.ext)  { S.ext  = false; addExtRow  && addExtRow.classList.remove('selected'); }
+    }
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goTo(n) { show(n); }
+
+// Show flat enquiry screen — bypasses quote flow entirely
+function showFlat() {
+  document.querySelectorAll('.qs-step').forEach(s => s.classList.remove('visible'));
+  document.getElementById('stepFlat').classList.add('visible');
+}
+
+// After property selection: flat → contact screen; terraced → skip bedrooms; others → bedrooms
+function afterPropSelected() {
+  if (S.prop === 'flat') {
+    showFlat();
+  } else if (S.prop === 'terraced') {
+    S.beds = '3';
+    show(3);
+  } else {
+    show(2);
+  }
+}
+
+// Back from services: terraced returns to step 1, others return to step 2
+function goBackToBedroomsOrProp() {
+  show(S.prop === 'terraced' ? 1 : 2);
+}
+
+// After step 3: go to 4 (if windows), 5 (if consRoof only), or contact details
+function goToAfter3() {
+  const s = stepSeq();
+  show(s[s.indexOf(3) + 1]);
+}
+
+// After step 4: go to 5 (if consRoof), or contact details
+function goToAfter4() {
+  if (S.svcs.has('consRoof')) show(5);
+  else show(6);
+}
+
+function goBack5() { show(S.svcs.has('windows') ? 4 : 3); }
+
+// Back from contact details: return to last selection step
+function goBackContact() {
+  if (S.svcs.has('consRoof')) show(5);
+  else if (S.svcs.has('windows')) show(4);
+  else show(3);
+}
+
+// ===== STEP SELECTIONS =====
+function selectProp(el) {
+  document.querySelectorAll('.prop-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  S.prop = el.dataset.val;
+  document.getElementById('next1').disabled = false;
+}
+
+function selectBed(el) {
+  document.querySelectorAll('#step2 .opt-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  S.beds = el.dataset.val;
+  document.getElementById('next2').disabled = false;
+}
+
+function toggleSvc(el) {
+  const v = el.dataset.svc;
+  el.classList.contains('selected')
+    ? (el.classList.remove('selected'), S.svcs.delete(v))
+    : (el.classList.add('selected'), S.svcs.add(v));
+  const both = S.svcs.has('gutterVac') && S.svcs.has('gutterFull');
+  const banner = document.getElementById('comboBanner');
+  banner.className = both ? 'combo-banner applied' : 'combo-banner';
+  banner.textContent = both
+    ? '✅ 20% combo discount applied — great choice!'
+    : '💰 Save 20% when you book both gutter services together';
+  document.getElementById('next3').disabled = S.svcs.size === 0;
+}
+
+function toggleAddon(k) {
+  S[k] = !S[k];
+  document.getElementById('add' + k[0].toUpperCase() + k.slice(1)).classList.toggle('selected', S[k]);
+  if (k === 'velux') document.getElementById('veluxCounter').style.display = S.velux ? 'block' : 'none';
+}
+
+function changeVelux(d) {
+  S.veluxN = Math.max(1, S.veluxN + d);
+  document.getElementById('veluxCount').textContent = S.veluxN;
+}
+
+function selectFreq(el) {
+  document.querySelectorAll('#step4 .opt-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  S.freq = el.dataset.freq;
+}
+
+function selectPanels(el) {
+  document.querySelectorAll('.panel-opt').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  S.panels = parseInt(el.dataset.panels);
+  document.getElementById('next5').disabled = false;
+}
+
+function validateContact() {
+  const n  = document.getElementById('cName').value.trim();
+  const a  = document.getElementById('cAddr').value.trim();
+  const ph = document.getElementById('cPhone').value.trim();
+  const em = document.getElementById('cEmail').value.trim();
+  document.getElementById('cErr').style.display = (n && a && !ph && !em) ? 'block' : 'none';
+  document.getElementById('next6').disabled = !(n && a && (ph || em));
+}
+
+// ===== CALCULATION =====
+function calc() {
+  const p = S.prop, b = S.beds === '2' ? '3' : S.beds, lines = [];
+  let total = 0;
+
+  if (S.svcs.has('windows')) {
+    const base       = CONFIG.PRICING.windows[p][b];
+    const consPrice  = S.cons  ? CONFIG.PRICING.consAddon[p] : 0;
+    const extPrice   = S.ext   ? CONFIG.PRICING.extAddon[p]  : 0;
+    const veluxPrice = S.velux ? CONFIG.PRICING.velux * S.veluxN : 0;
+
+    let freqBase, freqAddons, lineConsPrice, lineExtPrice, lineVeluxPrice;
+
+    if (p === 'terraced') {
+      // Terraced: flat +£2 for 8-weekly, no percentage. Conservatory/extension not available.
+      const surcharge = S.freq === '8weekly' ? CONFIG.TERRACED_EIGHT_WEEKLY_SURCHARGE : 0;
+      freqBase       = base + surcharge;
+      lineConsPrice  = 0;
+      lineExtPrice   = 0;
+      lineVeluxPrice = veluxPrice; // velux not frequency-adjusted on terraced
+      freqAddons     = veluxPrice;
+    } else {
+      // Semi / detached: percentage markup applies to the full window clean including add-ons
+      const freqMult = S.freq === '8weekly' ? CONFIG.EIGHT_WEEKLY_MARKUP : 1;
+      freqBase       = Math.round(base * freqMult);
+      lineConsPrice  = Math.round(consPrice  * freqMult);
+      lineExtPrice   = Math.round(extPrice   * freqMult);
+      lineVeluxPrice = Math.round(veluxPrice * freqMult);
+      freqAddons     = lineConsPrice + lineExtPrice + lineVeluxPrice;
+    }
+
+    const rMin = freqBase + freqAddons;
+    const rMax = Math.round(rMin * CONFIG.RANGE_SPREAD);
+    // First clean = 1.5x the 4-weekly price, always — regardless of chosen frequency.
+    // Uses raw 4-weekly prices (base + recurring add-ons) so 8-weekly customers aren't penalised.
+    // One-off services (gutters, conservatory roof) have no first-clean surcharge — already excluded.
+    const iMin = Math.round((base + consPrice + extPrice + veluxPrice) * CONFIG.INITIAL_MARKUP);
+    const iMax = Math.round(iMin * CONFIG.RANGE_SPREAD);
+    lines.push({
+      type: 'windows', rMin, rMax, iMin, iMax,
+      base: freqBase,
+      consPrice:  lineConsPrice,
+      extPrice:   lineExtPrice,
+      veluxPrice: lineVeluxPrice
+    });
+    total += rMin;
+  }
+
+  // Gutter and roof services are ONE-OFF jobs — price is always flat, never affected by window cleaning frequency
+  let gSub = 0;
+  if (S.svcs.has('gutterVac'))  { const pr = CONFIG.PRICING.gutterVac[p][b];  gSub += pr; lines.push({ type: 'gutterVac',  price: pr }); }
+  if (S.svcs.has('gutterFull')) { const pr = CONFIG.PRICING.gutterFull[p][b]; gSub += pr; lines.push({ type: 'gutterFull', price: pr }); }
+
+  let disc = 0;
+  if (S.svcs.has('gutterVac') && S.svcs.has('gutterFull')) {
+    disc = Math.round(gSub * CONFIG.COMBO_DISCOUNT);
+    total += gSub - disc;
+  } else {
+    total += gSub;
+  }
+
+  if (S.svcs.has('consRoof') && S.panels) {
+    const pr = CONFIG.PRICING.consRoof[S.panels];
+    lines.push({ type: 'roof', price: pr });
+    total += pr;
+  }
+
+  return { lines, disc, total };
+}
+
+// ===== QUOTE RENDERING =====
+function renderQuote() {
+  const { lines, disc, total } = calc();
+  const c = document.getElementById('quoteLines');
+  c.innerHTML = '';
+
+  lines.forEach(l => {
+    const d = document.createElement('div');
+    d.className = 'q-line';
+    if (l.type === 'windows') {
+      d.innerHTML = '<span>Window cleaning</span><div style="text-align:right">' +
+        '<div class="reg-price">£' + l.rMin + '–£' + l.rMax + '</div>' +
+        '<div class="reg-freq">per clean (' + (S.freq === '8weekly' ? 'every 8 weeks' : 'every 4 weeks') + ')</div>' +
+        '<div class="first-block">' +
+        '<div class="first-price">First clean: £' + l.iMin + '–£' + l.iMax + '</div>' +
+        '<div class="first-note">The first clean has a surcharge to allow us<br>to spend more time getting it perfect</div>' +
+        '</div></div>';
+    } else if (l.type === 'gutterVac') {
+      d.innerHTML = '<span>Gutter vacuuming</span><span>£' + l.price + '</span>';
+    } else if (l.type === 'gutterFull') {
+      d.innerHTML = '<span>Gutter, soffit &amp; fascia</span><span>£' + l.price + '</span>';
+    } else if (l.type === 'roof') {
+      d.innerHTML = '<span>Conservatory roof cleaning</span><span>£' + l.price + '</span>';
+    }
+    c.appendChild(d);
+  });
+
+  if (disc > 0) {
+    const d = document.createElement('div');
+    d.className = 'q-line discount';
+    d.innerHTML = '<span>✅ Gutter combo discount (20%)</span><span>−£' + disc + '</span>';
+    c.appendChild(d);
+  }
+
+  if (lines.length > 1 || disc > 0) {
+    const d = document.createElement('div');
+    d.className = 'q-line total';
+    d.innerHTML = '<span>Estimated total</span><span>£' + total + '</span>';
+    c.appendChild(d);
+  }
+}
+
+// ===== LEAD DATA =====
+function buildLeadData(requestType) {
+  const name  = document.getElementById('cName').value.trim();
+  const addr  = document.getElementById('cAddr').value.trim();
+  const phone = document.getElementById('cPhone').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+
+  const { lines, disc, total: tot } = calc();
+  const winLine        = lines.find(l => l.type === 'windows');
+  const gutterVacLine  = lines.find(l => l.type === 'gutterVac');
+  const gutterFullLine = lines.find(l => l.type === 'gutterFull');
+  const roofLine       = lines.find(l => l.type === 'roof');
+  const minQ = winLine ? winLine.rMin : tot;
+  const maxQ = winLine ? winLine.rMax : tot;
+
+  const fd = new FormData();
+  fd.append('requestType', requestType);
+  fd.append('name', name);
+  fd.append('address', addr);
+  fd.append('phone', phone);
+  fd.append('email', email);
+  fd.append('propertyType', S.prop === 'semi' ? 'Semi-Detached' : S.prop === 'detached' ? 'Detached' : 'Terraced (Front Only)');
+  fd.append('bedrooms', S.beds);
+  fd.append('conservatory', S.cons ? 'Yes' : 'No');
+  fd.append('extension', S.ext ? 'Yes' : 'No');
+  fd.append('velux', S.velux ? S.veluxN + ' window(s)' : 'No');
+  fd.append('windowBasePrice', winLine ? winLine.base : '');
+  fd.append('addonConservatory', winLine && winLine.consPrice ? '£' + winLine.consPrice : 'No');
+  fd.append('addonExtension',    winLine && winLine.extPrice  ? '£' + winLine.extPrice  : 'No');
+  fd.append('addonVelux',        winLine && winLine.veluxPrice ? '£' + winLine.veluxPrice : 'No');
+  fd.append('frequency', S.freq === '4weekly' ? '4 Weekly' : '8 Weekly');
+  fd.append('services', [...S.svcs].join(', '));
+  fd.append('windowCleaning',     S.svcs.has('windows')   ? 'Yes' : 'No');
+  fd.append('gutterVacuuming',    S.svcs.has('gutterVac') ? 'Yes' : 'No');
+  fd.append('gutterVacuumingPrice',  gutterVacLine  ? '£' + gutterVacLine.price  : 'No');
+  fd.append('gutterSoffitFascia',    S.svcs.has('gutterFull') ? 'Yes' : 'No');
+  fd.append('gutterSoffitFasciaPrice', gutterFullLine ? '£' + gutterFullLine.price : 'No');
+  fd.append('comboDiscount',      disc > 0 ? '£' + disc : 'No');
+  fd.append('conservatoryRoof',   S.svcs.has('consRoof') ? (S.panels === 21 ? '21+ panels' : 'Up to ' + S.panels + ' panels') : 'No');
+  fd.append('conservatoryRoofPrice', roofLine ? '£' + roofLine.price : 'No');
+  fd.append('minQuote', minQ);
+  fd.append('maxQuote', maxQ);
+  fd.append('finalQuote', tot);
+  fd.append('source', CONFIG.SOURCE_LABEL);
+  return fd;
+}
+
+async function sendLead(requestType) {
+  const fd = buildLeadData(requestType);
+  // Convert to URL-encoded string — avoids FormData serialisation issues in sandboxed
+  // environments. Google Apps Script handles this identically (e.parameter still works).
+  const body = new URLSearchParams([...fd.entries()]).toString();
+  try {
+    await fetch(CONFIG.SCRIPT_URL, {
+      method: 'POST',
+      body,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      mode: 'no-cors'
+    });
+  } catch(e) { console.error(e); }
+}
+
+// ===== QUOTE VIEWED — ABANDONMENT TRACKING =====
+// Called when the price is shown. Fires before contact details are collected.
+// ===== SHOW QUOTE =====
+// Contact details already collected — sends lead email immediately so Daniel
+// has the customer's details even if they don't click "Get me booked in"
+function showQuote() {
+  renderQuote();
+  show(7);
+  sendLead('quote');
+}
+
+// ===== BOOKING =====
+async function bookIn() {
+  const btn = document.querySelector('#step7 .btn-full');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+
+  await sendLead('booking');
+
+  window.parent.postMessage({
+    type: 'goldseal_booking_complete',
+    value: 360.0,
+    currency: 'GBP',
+    source: 'contact'
+  }, '*');
+
+  window.top.location.href = CONFIG.THANK_YOU_URL;
+}
+
+// ===== INIT =====
+renderDots();
+
+const heightObserver = new ResizeObserver(([{ contentRect }]) => {
+  window.parent.postMessage({ action: 'iframeHeightUpdated', height: contentRect.height }, '*');
+});
+heightObserver.observe(document.querySelector('.qs-wrap'));
+</script>
+</body>
+</html>
