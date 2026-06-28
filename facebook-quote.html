@@ -803,9 +803,7 @@ function buildLeadData(requestType) {
   const maxQ = winLine ? winLine.rMax : tot;
   const iMin = winLine ? winLine.iMin : null;
   const iMax = winLine ? winLine.iMax : null;
-  console.log('winLine:', winLine);
-  console.log('iMin:', iMin, 'iMax:', iMax);
-
+  
   const fd = new FormData();
   fd.append('requestType', requestType);
   fd.append('name', name);
