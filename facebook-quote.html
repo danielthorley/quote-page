@@ -801,6 +801,8 @@ function buildLeadData(requestType) {
   const roofLine       = lines.find(l => l.type === 'roof');
   const minQ = winLine ? winLine.rMin : tot;
   const maxQ = winLine ? winLine.rMax : tot;
+  const iMin = winLine ? winLine.iMin : null;
+  const iMax = winLine ? winLine.iMax : null;
 
   const fd = new FormData();
   fd.append('requestType', requestType);
@@ -829,6 +831,8 @@ function buildLeadData(requestType) {
   fd.append('conservatoryRoofPrice', roofLine ? '£' + roofLine.price : 'No');
   fd.append('minQuote', minQ);
   fd.append('maxQuote', maxQ);
+  fd.append('initialCleanMin', iMin !== null ? iMin : '');
+  fd.append('initialCleanMax', iMax !== null ? iMax : '');
   fd.append('finalQuote', tot);
   fd.append('source', CONFIG.SOURCE_LABEL);
   return fd;
